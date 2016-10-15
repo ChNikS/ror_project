@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   root to: "questions#index"
   resources :attachments, only: :destroy
 
+  devise_scope :user do
+    post '/users/confirm_email' => 'users#confirm_email', as: :confirm_email
+  end
+
   concern :votable do
     member do
       post :like

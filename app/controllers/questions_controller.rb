@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
   
   def index
     respond_with(@questions = Question.all)
+
   end
 
   def show

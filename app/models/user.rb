@@ -30,17 +30,23 @@ class User < ApplicationRecord
     else
       password = Devise.friendly_token[0, 20]
       if email.blank?
-        return User.new(email: name+'@'+auth.provider+'.com', password: password)
+        return User.new
       else 
         user = User.create!(email: email, password: password, password_confirmation: password)
+        user.create_authorization(auth.provider, auth.uid)
       end
     end
-    user.create_authorization(auth.provider, auth.uid)
     user
   end
 
   def create_authorization(provider, uid)
     self.authorizations.create(provider: provider, uid: uid)
+  end
+
+  def generate(user_email)
+    password = Devise.friendly_token[0, 20]
+    user = User.create!(email: user_email, password: password, password_confirmation: password)
+    user
   end
 
 end

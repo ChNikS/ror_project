@@ -12,6 +12,10 @@ feature 'User sign in through social network account', '
     Rails.application.env_config["omniauth.auth"] = mock_auth_hash_without_email('twitter')
     click_on('Sign in with Twitter')
 
+    expect(page).to have_content 'Please confirm your email address after continue.'
+    fill_in 'Email', with: 'test@test.com' 
+    click_on('Confirm')
+
     expect(page).to have_content 'Successfully authenticated from Twitter account.'
     expect(current_path).to eq root_path
   end
