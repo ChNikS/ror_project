@@ -8,10 +8,10 @@ p
         li id="file-#{a.id}"
           = link_to a.file.identifier, a.file.url 
           |&nbsp;
-          -if user_signed_in? && ( current_user.id == @question.user_id )
+          -if can?(:destroy, a)
             = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' } 
 br
-- if user_signed_in? && ( current_user.id != @question.user_id )
+- if can?(:like, @question)
       .voting
         .votable-total id="votable-total-#{@question.id}"
           = @question.total
@@ -19,14 +19,15 @@ br
             li= link_to 'change vote', [:change_vote, @question], method: :patch, remote: true
             li= link_to 'cancel vote', [:cancel_vote, @question], method: :delete, remote: true
                 
-          
+-if can?(:change_vote, @question)
           ul id="votable-not-yet-links-#{@question.id}" class="#{current_user.can_vote?(@question) ? '' : 'hidden' }" 
             li= link_to 'like', [:like, @question], method: :post, remote: true
             li= link_to 'dislike', [:dislike, @question], method: :post, remote: true           
 br
-- if user_signed_in? && ( current_user.id == @question.user_id )
+- if can?(:destroy, @question)
   =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
   ||
+- if can?(:update, @question)  
   =link_to 'Edit', edit_question_path(@question)
   | &nbsp;question
 

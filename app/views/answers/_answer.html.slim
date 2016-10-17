@@ -10,40 +10,38 @@
               li id="file-#{a.id}"
                 =link_to a.file.identifier,a.file.url
                 |&nbsp;
-                -if user_signed_in? && ( current_user.id == answer.user_id )
+                -if can?(:destroy, a)
                   = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' }
     
     br
     |Posted #{time_ago_in_words(answer.created_at) } ago.
-    - if user_signed_in? 
-      -if current_user.id == answer.user_id 
-        p= link_to "Delete answer", answer, remote: true, method: :delete,   data: { confirm: "You sure?" }  
-        p= link_to  'Edit', '',remote: true, class: 'edit-answer-link', data: { answer_id: answer.id }
+    -if can?(:destroy, answer) 
+      p= link_to "Delete answer", answer, remote: true, method: :delete,   data: { confirm: "You sure?" }  
+      p= link_to  'Edit', '',remote: true, class: 'edit-answer-link', data: { answer_id: answer.id }
+    -if can?(:update, answer)
+      = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}"} do |f|
+        p= f.label :body, 'Edit your answer:'
+        p= f.text_area :body
+        = f.fields_for :attachments, remote: true do |a|
+          = render 'attachment_fields', f: a
+        .answers_edit_fields
+          = link_to_add_association 'Add file', f, :attachments
+        p= f.submit 'Update answer'
+    -if can?(:like, answer)
+      .voting
+        .votable-total id="votable-total-#{answer.id}"
+          = answer.total
+          ul id="votable-already-links-#{answer.id}" class="#{current_user.voted?(answer) ? '' : 'hidden' }"
+            li= link_to 'change vote', [:change_vote, answer], method: :patch, remote: true
+            li= link_to 'cancel vote', [:cancel_vote, answer], method: :delete, remote: true
+                
+    -if can?(:change_vote, answer)    
+      ul id="votable-not-yet-links-#{answer.id}" class="#{current_user.can_vote?(answer) ? '' : 'hidden' }" 
+        li= link_to 'like', [:like, answer], method: :post, remote: true
+        li= link_to 'dislike', [:dislike, answer], method: :post, remote: true
 
-        = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}"} do |f|
-          p= f.label :body, 'Edit your answer:'
-          p= f.text_area :body
-          = f.fields_for :attachments, remote: true do |a|
-            = render 'attachment_fields', f: a
-          .answers_edit_fields
-            = link_to_add_association 'Add file', f, :attachments
-          p= f.submit 'Update answer'
-      -else
-        .voting
-          .votable-total id="votable-total-#{answer.id}"
-            = answer.total
-            ul id="votable-already-links-#{answer.id}" class="#{current_user.voted?(answer) ? '' : 'hidden' }"
-              li= link_to 'change vote', [:change_vote, answer], method: :patch, remote: true
-              li= link_to 'cancel vote', [:cancel_vote, answer], method: :delete, remote: true
-                  
-            
-            ul id="votable-not-yet-links-#{answer.id}" class="#{current_user.can_vote?(answer) ? '' : 'hidden' }" 
-              li= link_to 'like', [:like, answer], method: :post, remote: true
-              li= link_to 'dislike', [:dislike, answer], method: :post, remote: true
-
-    -if user_signed_in?
-      -if current_user.id == answer.question.user_id
-        =link_to 'Best answer', best_answer_path(answer),  method: :patch, remote: true 
+    - if can?(:best, answer)
+      =link_to 'Best answer', best_answer_path(answer),  method: :patch, remote: true 
     br
     hr
     |comments:
