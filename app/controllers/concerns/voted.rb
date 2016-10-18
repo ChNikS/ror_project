@@ -7,35 +7,23 @@ module Voted
   end
 
   def like
-    if current_user.can_vote?(@votable)
-      respond_with(@votable.vote(current_user, 1), template: 'votes/vote.json.jbuilder')
-    else
-      render json: '{"error": "You cannot vote"}', status: :unprocessable_entity
-    end
+    authorize! :like, @votable
+    respond_with(@votable.vote(current_user, 1), template: 'votes/vote.json.jbuilder')
   end
 
   def dislike
-    if current_user.can_vote?(@votable)
-      respond_with(@votable.vote(current_user, -1), template: 'votes/vote.json.jbuilder')
-    else
-      render json: '{"error": "You cannot vote"}', status: :unprocessable_entity
-    end
+    authorize! :dislike, @votable
+    respond_with(@votable.vote(current_user, -1), template: 'votes/vote.json.jbuilder')
   end
 
   def change_vote
-    if !current_user.author_of?(@votable) && current_user.voted?(@votable)
-      respond_with(@votable.change_vote_value(current_user), template: 'votes/vote.json.jbuilder')
-    else
-      render json: '{"error": "You cannot vote"}', status: :unprocessable_entity
-    end
+    authorize! :change_vote, @votable
+    respond_with(@votable.change_vote_value(current_user), template: 'votes/vote.json.jbuilder')
   end
 
   def cancel_vote
-    if !current_user.author_of?(@votable) && current_user.voted?(@votable)
-      respond_with(@votable.cancel_votable(current_user), template: 'votes/vote.json.jbuilder')
-    else
-      render json: '{"error": "You cannot vote"}', status: :unprocessable_entity
-    end
+    authorize! :cancel_vote, @votable
+    respond_with(@votable.cancel_votable(current_user), template: 'votes/vote.json.jbuilder')
   end
 
   private

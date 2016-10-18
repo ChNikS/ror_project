@@ -3,7 +3,9 @@ class CommentsController < ApplicationController
   before_action :load_commentable, only: [:create]
   before_action :load_comment, except: [:create]
   after_action :publish
-
+  
+  authorize_resource
+  
   respond_to :js, :json
 
   def create
@@ -13,17 +15,13 @@ class CommentsController < ApplicationController
 
   def update
     @method = "update"
-    if current_user.author_of?(@comment) 
-      @comment.update(comment_params)
-      respond_with(@comment)
-    end
+    @comment.update(comment_params)
+    respond_with(@comment)
   end
 
   def destroy
     @method = "delete"
-    if current_user.author_of?(@comment)
-      respond_with(@comment.destroy)
-    end
+    respond_with(@comment.destroy)
   end
   
   private

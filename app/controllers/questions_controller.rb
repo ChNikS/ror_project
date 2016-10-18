@@ -4,6 +4,9 @@ class QuestionsController < ApplicationController
   before_action :load_user
   before_action :build_answer, only: [:show]
   after_action :publish, only: [:create]
+  
+  authorize_resource
+
   respond_to :html
   respond_to :json, only: :create
   
@@ -30,18 +33,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(@question)
-      @question.update(question_params)
-      respond_with @question
-    end
+    @question.update(question_params)
+    respond_with @question
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      respond_with(@question.destroy)
-    else
-      redirect_to question_path(@question)
-    end
+    respond_with(@question.destroy) 
   end
 
   private

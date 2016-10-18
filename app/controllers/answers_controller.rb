@@ -4,8 +4,11 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create, :update, :destroy, :best]
   before_action :load_user
   after_action :publish, only: [:create, :update, :destroy]
-  
+
+  authorize_resource
+    
   respond_to :js, :json
+
   
   include Voted
   
@@ -19,27 +22,17 @@ class AnswersController < ApplicationController
 
   def update
     @method = "update"
-    if current_user.author_of?(@answer) 
-      @answer.update(answer_params)
-      respond_with(@answer)
-    end
+    @answer.update(answer_params)
+    respond_with(@answer)
   end
   
   def best
-    if current_user.author_of?(@question)
-      @answer.best!
-    else
-      @best_answer_error = "You cannot choose best answer."
-    end
+    @answer.best!
   end
 
   def destroy
     @method = "delete"
-    if current_user.author_of?(@answer)
-      respond_with(@answer.destroy)
-    else
-       @destroy_answer_error = "You cannot delete answers written by others."
-    end
+    respond_with(@answer.destroy)
   end
 
   private
