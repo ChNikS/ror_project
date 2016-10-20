@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
 
+  scope :profiles, ->(user_id) { where.not(id: user_id)}
+
   def author_of?(object)
     object.user_id == id
   end
