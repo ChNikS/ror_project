@@ -45,6 +45,9 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'cancancan'
 gem 'doorkeeper'
+gem 'active_model_serializers'
+gem 'oj'
+gem 'oj_mimic_json'
 
 
 source 'https://rails-assets.org' do
@@ -62,7 +65,6 @@ group :development, :test do
 end
 group :test do
   gem 'shoulda-matchers', require: false
-  gem 'capybara'
   gem 'launchy'
   gem 'json_spec'
 end
