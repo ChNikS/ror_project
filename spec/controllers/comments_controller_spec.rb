@@ -26,10 +26,9 @@ RSpec.describe CommentsController, type: :controller do
         expect(assigns(:comment).user).to eq @user
       end
 
-      it 'render create template' do
-        post :create, comment: attributes_for(:comment), commentable_type: 'question', question_id: question.id, format: :js
-
-        expect(response).to render_template :create
+      it 'recieves publish_to Private_pub' do
+        expect(PrivatePub).to receive(:publish_to)
+        post :create, params: { commentable_type: 'question', comment: attributes_for(:comment), question_id: question.id, format: :json }
       end
     end
 
@@ -37,6 +36,11 @@ RSpec.describe CommentsController, type: :controller do
       it 'save new comment for question' do
         expect { post :create, comment: attributes_for(:invalid_comment), commentable_type: 'question', question_id: question.id, format: :js }
           .to_not change(Comment, :count)
+      end
+
+      it 'do not receive publish_to Private_pub' do
+        expect(PrivatePub).to_not receive(:publish_to)
+        post :create, params: { commentable_type: 'question', comment: attributes_for(:comment), question_id: question.id, format: :json }
       end
     end
   end
@@ -60,6 +64,11 @@ RSpec.describe CommentsController, type: :controller do
         patch :update, id: comment, comment: { body: 'new content' }, format: :js
 
         expect(response).to render_template :update
+      end
+
+      it 'recieves publish_to Private_pub' do
+        expect(PrivatePub).to receive(:publish_to)
+        patch :update, params: { id: comment, comment: attributes_for(:comment), format: :js }
       end
     end
 
@@ -85,6 +94,11 @@ RSpec.describe CommentsController, type: :controller do
         delete :destroy, id: comment, format: :js
 
         expect(response).to render_template :destroy
+      end
+
+      it 'recieves publish_to Private_pub' do
+        expect(PrivatePub).to receive(:publish_to)
+        delete :destroy, params: { id: comment, format: :json }
       end
     end
 

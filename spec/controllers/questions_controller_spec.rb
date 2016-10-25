@@ -1,5 +1,4 @@
 require 'rails_helper'
-require Rails.root.join('spec/controllers/concerns/voted_spec.rb')
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
@@ -76,6 +75,14 @@ RSpec.describe QuestionsController, type: :controller do
       it 'renew new view' do
         post :create, question: attributes_for(:invalid_question)
         expect(response).to render_template :new
+      end
+    end
+
+    context 'Private_pub' do
+      it 'recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+
+        post :create, question: attributes_for(:question)
       end
     end
   end

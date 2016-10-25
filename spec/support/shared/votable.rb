@@ -1,6 +1,4 @@
-require 'rails_helper'
-
-RSpec.shared_examples_for "votable" do
+shared_examples_for "votable" do
   let(:user) { create(:user) }
   let(:user_2) { create(:user) }
   let(:user_3) { create(:user) }
