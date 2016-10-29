@@ -24,6 +24,13 @@ br
             li= link_to 'like', [:like, @question], method: :post, remote: true
             li= link_to 'dislike', [:dislike, @question], method: :post, remote: true           
 br
+
+  .subscriptions
+    - if can?(:subscribe, Question)
+      =link_to 'Subscribe', subscribe_question_path(@question), remote: true, method: :post
+    - if can?(:unsubscribe, Question)
+      =link_to 'Unubscribe', unsubscribe_question_path(@question), remote: true, method: :delete
+br
 - if can?(:destroy, @question)
   =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
   ||

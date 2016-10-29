@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create, :update, :destroy, :best]
   before_action :load_user
   after_action :publish, only: [:create, :update, :destroy]
+  after_action :notice, only: [:create]
 
   authorize_resource
     
@@ -64,4 +65,7 @@ class AnswersController < ApplicationController
                           method: @method
   end
 
+  def notice
+    NoticeJob.perform_later(@answer) if @answer.valid?
+  end
 end

@@ -42,5 +42,13 @@ class Ability
     can [:change_vote, :cancel_vote], [Question, Answer] do |votable|
       !user.author_of?(votable) && user.voted?(votable)
     end
+
+    can :subscribe, Question do |question|
+      !user.subscribed?(question)
+    end
+
+    can :unsubscribe, Question do |question|
+      user.subscribed?(question)
+    end
   end
 end

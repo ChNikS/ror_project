@@ -2,7 +2,8 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :authorizations, dependent: :destroy
-
+  has_many :subscriptions, dependent: :destroy
+  
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
 
@@ -51,4 +52,21 @@ class User < ApplicationRecord
     user
   end
 
+  def self.send_daily_digest
+    find_each.each do |user|
+      DailyMailer.digest(user).deliver
+    end
+  end
+
+  def subscribed?(question)
+    subscriptions.where(question: question).exists?
+  end
+
+  def subscribe_to(question)
+    subscriptions.create(question: question)
+  end
+
+  def unsubscribe_from(question)
+    subscriptions.where(question: question).delete_all
+  end
 end

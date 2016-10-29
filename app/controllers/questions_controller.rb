@@ -4,11 +4,13 @@ class QuestionsController < ApplicationController
   before_action :load_user
   before_action :build_answer, only: [:show]
   after_action :publish, only: [:create]
+  after_action :subscribe_author, only: [:create]
   
   authorize_resource
 
   respond_to :html
   respond_to :json, only: :create
+  respond_to :js, only: [:subscribe, :unsubscribe]
   
   include Voted
   
@@ -41,6 +43,14 @@ class QuestionsController < ApplicationController
     respond_with(@question.destroy) 
   end
 
+  def subscribe
+    respond_with(current_user.subscribe_to(@question))
+  end
+
+  def unsubscribe
+    respond_with(current_user.unsubscribe_from(@question))
+  end
+
   private
 
   def publish
@@ -63,5 +73,9 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body, attachments_attributes: [:file, :_destroy]).merge(user: current_user)
+  end
+
+  def subscribe_author
+    current_user.subscribe_to(@question) if @question.valid?
   end
 end
