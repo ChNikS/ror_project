@@ -9,6 +9,8 @@ require 'shoulda/matchers'
 require 'capybara/rails'
 require 'factory_girl_rails'
 require 'cancan/matchers'
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec

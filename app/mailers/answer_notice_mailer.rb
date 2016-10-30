@@ -1,2 +1,0 @@
-class AnswerNoticeMailer < ApplicationMailer
-end

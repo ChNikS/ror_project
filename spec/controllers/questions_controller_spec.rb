@@ -164,10 +164,8 @@ RSpec.describe QuestionsController, type: :controller do
       expect { post :subscribe, params: { id: question, format: :js } }.to change(question.subscriptions, :count).by(1)
     end
     
-    it 'subscribe belongs to user' do
-      post :subscribe, params: { id: question, format: :js }
-      
-      expect(assigns(:question).subscriptions.last.user).to eq subject.current_user
+    it 'subscribe belongs to user' do      
+      expect { post :subscribe, params: { id: question, format: :js } }.to change(@user.subscriptions, :count).by(1)
     end
     
     it 'render view' do

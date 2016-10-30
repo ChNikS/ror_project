@@ -8,7 +8,7 @@ class Question < ApplicationRecord
   belongs_to :user
   has_one :best_answer, -> { where(best: true) }, class_name: Answer
 
-  scope :for_digest, -> { where("DATE(created_at) = ?", Date.today-1) }
+  scope :for_digest, -> {  where(created_at: 1.day.ago.all_day) }
   
   validates :title, :body, :user_id, presence: true
   validates :title, length: { maximum: 100 }
