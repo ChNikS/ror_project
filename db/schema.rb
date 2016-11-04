@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027181435) do
+ActiveRecord::Schema.define(version: 20161103092703) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
     t.text     "body"
@@ -19,8 +22,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.datetime "updated_at",                  null: false
     t.integer  "user_id"
     t.boolean  "best",        default: false, null: false
-    t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["user_id"], name: "index_answers_on_user_id"
+    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
+    t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -29,8 +32,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.datetime "updated_at",          null: false
     t.integer  "attachmentable_id"
     t.string   "attachmentable_type"
-    t.index ["attachmentable_id"], name: "index_attachments_on_attachmentable_id"
-    t.index ["attachmentable_type"], name: "index_attachments_on_attachmentable_type"
+    t.index ["attachmentable_id"], name: "index_attachments_on_attachmentable_id", using: :btree
+    t.index ["attachmentable_type"], name: "index_attachments_on_attachmentable_type", using: :btree
   end
 
   create_table "authorizations", force: :cascade do |t|
@@ -39,8 +42,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.string   "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["provider", "uid"], name: "index_authorizations_on_provider_and_uid"
-    t.index ["user_id"], name: "index_authorizations_on_user_id"
+    t.index ["provider", "uid"], name: "index_authorizations_on_provider_and_uid", using: :btree
+    t.index ["user_id"], name: "index_authorizations_on_user_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
@@ -50,8 +53,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.integer  "user_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
-    t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
+    t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -63,7 +66,7 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.datetime "created_at",        null: false
     t.datetime "revoked_at"
     t.string   "scopes"
-    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -76,9 +79,9 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.datetime "created_at",                          null: false
     t.string   "scopes"
     t.string   "previous_refresh_token", default: "", null: false
-    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
-    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
-    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
   end
 
   create_table "oauth_applications", force: :cascade do |t|
@@ -89,7 +92,7 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.string   "scopes",       default: "", null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
@@ -98,14 +101,19 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
-    t.index ["user_id"], name: "index_questions_on_user_id"
+    t.index ["user_id"], name: "index_questions_on_user_id", using: :btree
+  end
+
+  create_table "searches", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id"
     t.integer "question_id"
-    t.index ["question_id"], name: "index_subscriptions_on_question_id"
-    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+    t.index ["question_id"], name: "index_subscriptions_on_question_id", using: :btree
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -122,8 +130,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.boolean  "admin",                  default: false, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "votes", force: :cascade do |t|
@@ -133,8 +141,8 @@ ActiveRecord::Schema.define(version: 20161027181435) do
     t.integer  "user_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.index ["user_id"], name: "index_votes_on_user_id"
-    t.index ["votable_id", "votable_type"], name: "index_votes_on_votable_id_and_votable_type"
+    t.index ["user_id"], name: "index_votes_on_user_id", using: :btree
+    t.index ["votable_id", "votable_type"], name: "index_votes_on_votable_id_and_votable_type", using: :btree
   end
 
 end

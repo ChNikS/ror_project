@@ -6,7 +6,6 @@
   = f.text_area :body
   p Attachments:
   = f.fields_for :attachments, @question.attachments.build do |a|
-    = render 'attachment_fields', f: a
   .fields
     = link_to_add_association 'add file', f, :attachments 
 
