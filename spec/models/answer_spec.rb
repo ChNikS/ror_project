@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
+  it_behaves_like 'votable'
   it { should validate_presence_of :body }
   it { should validate_presence_of :question_id }
   it { should validate_presence_of :user_id}

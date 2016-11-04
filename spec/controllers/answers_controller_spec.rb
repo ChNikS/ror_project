@@ -32,6 +32,12 @@ RSpec.describe AnswersController, type: :controller do
         post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
         expect(response).to render_template :create
       end
+      
+      it 'recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+        
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+      end
     end
 
     context 'with invalid attributes' do
@@ -42,6 +48,12 @@ RSpec.describe AnswersController, type: :controller do
       it 're-renders new' do
         post :create, params: { question_id: question, answer: attributes_for(:invalid_answer), format: :js }
         expect(response).to render_template :create
+      end
+
+      it 'do not recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+        
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
       end
     end    
   end
@@ -63,6 +75,14 @@ RSpec.describe AnswersController, type: :controller do
        it 'render update template' do
         patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
         expect(response).to render_template :update
+      end
+    end
+
+    context 'Private_pub' do
+      it 'recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+        
+        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
       end
     end
   end
@@ -103,7 +123,7 @@ RSpec.describe AnswersController, type: :controller do
         
         expect(answer.best).to eq false
       end
-    end
+    end    
   end
 
   describe 'DELETE #destroy' do
@@ -127,6 +147,16 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { id: other_answer, format: :js } }.to_not change(Answer, :count)
       end
     end
+
+    context 'Private_pub' do
+      it 'recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+        
+        delete :destroy, params: { id: answer, format: :js }
+      end
+    end
   end
+
+  it_behaves_like 'voted', 'answer'
 end
 

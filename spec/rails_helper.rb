@@ -8,6 +8,9 @@ require 'rspec/rails'
 require 'shoulda/matchers'
 require 'capybara/rails'
 require 'factory_girl_rails'
+require 'cancan/matchers'
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
@@ -39,6 +42,7 @@ RSpec.configure do |config|
   #config.include Devise::TestHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
+  config.include ApiMacros
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

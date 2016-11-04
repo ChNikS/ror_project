@@ -1,0 +1,8 @@
+#confirm_email
+  p
+    |Please confirm your email address 
+
+  = form_for(@user, url: confirm_email_path(@user)) do |f|
+    = f.label :email
+    = f.text_field :email, required: true
+    = f.submit 'Confirm'

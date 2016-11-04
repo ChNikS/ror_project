@@ -1,0 +1,9 @@
+ul.comments id="#{ commentable.class.name.downcase }-#{ commentable.id }"  data= { question: "#{ commentable.class.name.downcase == 'answer' ? commentable.question_id : commentable.id}" } 
+  - if commentable.comments.any?
+      = render commentable.comments
+
+-if user_signed_in?
+  = form_for [commentable, commentable.comments.build], remote: true, html: { id: "add-comment-#{ commentable.class.name.downcase }-#{ commentable.id }" }  do |f|
+    = f.label :body
+    = f.text_area :body
+    = f.submit 'Add comment'

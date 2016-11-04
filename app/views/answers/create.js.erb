@@ -2,8 +2,4 @@
   <% @answer.errors.full_messages.each do |error_message| %>
     $('.messages').html('<%= j error_message%><br>');
   <% end %>
-<% else %>
-  $('.answers').append('<%= j render @answer %>');
-  $('.messages').html('Your answer successfully created.<br>');
-  $('#answer_body').val('');
 <%end%>

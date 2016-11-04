@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
     before { get :index }
@@ -21,11 +22,7 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question
     end
-
-    it 'builds new attachment for answer' do
-      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
-    end
-
+    
     it 'renders show view' do
       expect(response).to render_template :show
     end
@@ -37,10 +34,6 @@ RSpec.describe QuestionsController, type: :controller do
     
     it 'assigns a new Question to a @question' do
       expect(assigns(:question)).to be_a_new(Question)
-    end
-
-     it 'builds new attachment for question' do
-      expect(assigns(:question).attachments.first).to be_a_new(Attachment)
     end
 
     it 'renders new view' do
@@ -82,6 +75,14 @@ RSpec.describe QuestionsController, type: :controller do
       it 'renew new view' do
         post :create, question: attributes_for(:invalid_question)
         expect(response).to render_template :new
+      end
+    end
+
+    context 'Private_pub' do
+      it 'recieves publish_to' do
+        expect(PrivatePub).to receive(:publish_to)
+
+        post :create, question: attributes_for(:question)
       end
     end
   end
@@ -154,4 +155,40 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #subscribe' do
+    sign_in_user
+    before { question }
+
+    it 'saves the new subscribe in the database' do
+      expect { post :subscribe, params: { id: question, format: :js } }.to change(question.subscriptions, :count).by(1)
+    end
+    
+    it 'subscribe belongs to user' do      
+      expect { post :subscribe, params: { id: question, format: :js } }.to change(@user.subscriptions, :count).by(1)
+    end
+    
+    it 'render view' do
+      post :subscribe, params: { id: question, format: :js }
+      
+      expect(response).to render_template :subscribe
+    end
+  end
+  
+  describe 'DELETE #unsubscribe' do
+    sign_in_user
+    let!(:subscription) { create(:subscription, question: question, user: @user) }
+
+    it 'saves the new subscribe in the database' do
+      expect { delete :unsubscribe, params: { id: question, format: :js } }.to change(Subscription, :count).by(-1)
+    end
+    
+    it 'render view' do
+      delete :unsubscribe, params: { id: question, format: :js }
+      
+      expect(response).to render_template :unsubscribe
+    end
+  end
+
+  it_behaves_like 'voted', 'question'
 end

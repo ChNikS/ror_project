@@ -1,0 +1,13 @@
+li.comment id="comment-#{ @comment.id }"
+  div id="comment_body-#{ @comment.id }"
+    p #{ @comment.body }
+  
+  - if @user == @comment.user
+    a href="/comments/#{ @comment.id }"data-method="delete" data-remote="true" Delete comment
+    br
+    form data-remote="true" id="edit-comment-#{ @comment.id }" action="/comments/#{ @comment.id }" accept-charset="UTF-8" method="post"
+    input type="hidden" name="_method" value="patch"
+    <label for="comment_body">Comment text</label>
+    textarea id= "comment_body" name="comment[body]" #{ @comment.body }    
+    button type="submit" Update comment
+ 

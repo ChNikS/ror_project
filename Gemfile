@@ -35,6 +35,25 @@ gem 'devise'
 gem 'carrierwave'
 gem 'remotipart', github: 'mshibuya/remotipart', ref: '88d9a7'
 gem 'cocoon'
+gem 'skim'
+gem 'private_pub'
+gem 'thin'
+gem 'gon'
+gem 'responders', '~> 2.0'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'cancancan'
+gem 'doorkeeper'
+gem 'active_model_serializers'
+gem 'oj'
+gem 'oj_mimic_json'
+gem 'whenever', :require => false
+
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.1.0'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -47,8 +66,8 @@ group :development, :test do
 end
 group :test do
   gem 'shoulda-matchers', require: false
-  gem 'capybara'
   gem 'launchy'
+  gem 'json_spec'
 end
 
 group :development do

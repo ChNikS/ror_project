@@ -1,46 +1,39 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_answer, only: [:update, :best, :destroy]
-  before_action :load_question, only: [:create, :new]
+  before_action :load_question, only: [:create, :update, :destroy, :best]
+  before_action :load_user
+  after_action :publish, only: [:create, :update, :destroy]
+  after_action :notice, only: [:create]
 
-  def new
-    @answer = @question.answers.new
-  end
+  authorize_resource
+    
+  respond_to :js, :json
 
+  
+  include Voted
+  
   def create
-    @answer = @question.answers.build(answer_params.merge(user: current_user))
-    if !@answer.save
-      @answers = @question.answers.reload
-    end
+    @method = "create"
+    respond_with(@answer = @question.answers.create(answer_params))
   end
 
   def edit
   end
 
   def update
-    @question = @answer.question
-    if current_user.id == @answer.user_id 
-      @answer.update(answer_params)
-    end
+    @method = "update"
+    @answer.update(answer_params)
+    respond_with(@answer)
   end
   
   def best
-    if current_user.id == @answer.question.user_id
-      @answer.best!
-      
-    else
-      @best_answer_error = "You cannot choose best answer."
-    end
+    @answer.best!
   end
 
   def destroy
-    @question = @answer.question
-    if current_user.id == @answer.user_id
-      @answer.destroy
-      flash.now[:notice] = "Your answer has been successfully deleted!"
-    else
-       @destroy_answer_error = "You cannot delete answers written by others."
-    end
+    @method = "delete"
+    respond_with(@answer.destroy)
   end
 
   private
@@ -49,11 +42,30 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:id])
   end
   def load_question
-    @question = Question.find(params[:question_id])
+    if params[:question_id].present?
+      @question = Question.find(params[:question_id])
+    else
+      @question = @answer.question
+    end
+  end
+
+  def load_user
+    if current_user.present?
+      gon.user = current_user.id
+    end
   end
 
   def answer_params
-    params.require(:answer).permit(:body, attachments_attributes: [:file, :_destroy])
+    params.require(:answer).permit(:body, attachments_attributes: [:file, :_destroy]).merge(user: current_user)
   end
 
+  def publish
+    PrivatePub.publish_to "/questions/#{@answer.question_id}/answers",
+                          answer: @answer.to_builder, 
+                          method: @method
+  end
+
+  def notice
+    NoticeJob.perform_later(@answer) if @answer.valid?
+  end
 end

@@ -1,0 +1,26 @@
+li id="answer-#{@answer.id}" class="#{(@answer.best ? 'best-answer' : '')}"
+    span= @answer.body
+    br
+    ul class="answer_files"
+      - for a in @answer.attachments
+        li id="file-#{a.id}"
+          a href="/uploads/attachment/file/#{a.id}/#{a.file.filename}" "#{a.file.filename}"
+          - if @user == @answer.user
+            a href="/attachments/#{ a.id }" data-method="delete" data-confirm="You sure" data-remote="true" Delete file
+    ul id="votable-not-already-links-#{@answer.id}" class="hidden"
+    ul id="votable-not-yet-links-#{@answer.id}"
+      li
+        a href="/answers/#{ @answer.id }/like" data-method="post" data-confirm="You sure" data-remote="true" like
+      li
+        a href="/answers/#{ @answer.id }/dislike" data-method="post" data-confirm="You sure" data-remote="true" dislike
+
+    a href="/answers/#{ @answer.id }/best" data-method="patch" data-remote="true" Best    
+    br
+    - if @user == @answer.user
+      a href="/answers/#{ @answer.id }" data-method="delete" data-confirm="You sure" data-remote="true" Delete answer
+      br
+      form data-remote="true" id="edit-answer-#{ @answer_id }" action="/answers/#{ @answer_id }" accept-charset="UTF-8" method="post"
+      input type="hidden" name="_method" value="patch"
+      <label for="answer_body">Answer text</label>
+      textarea id= "answer_body" name="answer[body]" #{ @answer_body }
+      button type="submit" class="btn btn-primary active" Update answer
