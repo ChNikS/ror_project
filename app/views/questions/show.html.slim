@@ -39,9 +39,9 @@ br
   | &nbsp;question
 
 br
+ol.answers
 - if @question.answers.any?
-    ol.answers
-      = render @answers
+    = render @answers
 = subscribe_to "/questions/#{@question.id}/answers"
 br
 hr
