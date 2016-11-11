@@ -1,0 +1,8 @@
+.search_results
+- @results.each do |result|
+    hr/ 
+    b= result.class
+    h4= highlight(link_to(result.title, result), params[:q]) if result.respond_to?(:title)
+    h4= highlight(result.email, params[:q]) if result.respond_to?(:email)
+    p= highlight(result.body, params[:q]) if result.respond_to?(:body)
+     
