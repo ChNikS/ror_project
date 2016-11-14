@@ -55,6 +55,8 @@ gem 'sinatra', require: nil
 gem 'sidetiq'
 gem 'mysql2'
 gem 'thinking-sphinx'
+gem 'dotenv'
+gem 'dotenv-deployment', require: 'dotenv/development'
 
 
 source 'https://rails-assets.org' do
@@ -69,6 +71,10 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'capybara'
   gem 'capybara-webkit'
+  gem 'capistrano', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rvm', require: false
 end
 group :test do
   gem 'shoulda-matchers', require: false
