@@ -30,6 +30,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+gem 'dotenv-rails', :require => 'dotenv/rails-now'
 gem 'slim-rails'
 gem 'rails-controller-testing'
 gem 'devise'
@@ -58,7 +59,6 @@ gem 'thinking-sphinx'
 #gem 'dotenv'
 #gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'therubyracer'
-gem 'dotenv-rails'
 
 
 source 'https://rails-assets.org' do
