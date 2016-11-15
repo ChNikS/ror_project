@@ -7,10 +7,10 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 # Load defaults from config/*.env in config
-Dotenv.load *Dir.glob(Rails.root.join("config/**/*.env"), File::FNM_DOTMATCH)
+Dotenv.load *Dir.glob(Rails.root.join("shared/**/*.env"), File::FNM_DOTMATCH)
 
 # Override any existing variables if an environment-specific file exists
-Dotenv.overload *Dir.glob(Rails.root.join("config/**/*.env.#{Rails.env}"), File::FNM_DOTMATCH)
+Dotenv.overload *Dir.glob(Rails.root.join("shared/**/*.env.#{Rails.env}"), File::FNM_DOTMATCH)
 
 module RorProject
   class Application < Rails::Application
