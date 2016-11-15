@@ -55,8 +55,8 @@ gem 'sinatra', require: nil
 gem 'sidetiq'
 gem 'mysql2'
 gem 'thinking-sphinx'
-gem 'dotenv'
-gem 'dotenv-deployment', require: 'dotenv/deployment'
+#gem 'dotenv'
+#gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'therubyracer'
 gem 'dotenv-rails'
 

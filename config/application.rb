@@ -6,11 +6,9 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Load defaults from config/*.env in config
-Dotenv.load *Dir.glob(Rails.root.join("shared/**/*.env"), File::FNM_DOTMATCH)
+Dotenv::Railtie.load
 
-# Override any existing variables if an environment-specific file exists
-Dotenv.overload *Dir.glob(Rails.root.join("shared/**/*.env.#{Rails.env}"), File::FNM_DOTMATCH)
+HOSTNAME = ENV['HOSTNAME']
 
 module RorProject
   class Application < Rails::Application
