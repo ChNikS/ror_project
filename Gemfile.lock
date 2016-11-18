@@ -83,6 +83,9 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano-thin (1.2.0)
+      capistrano (~> 3.0)
+      thin (~> 1.6)
     capybara (2.7.1)
       addressable
       mime-types (>= 1.16)
@@ -426,6 +429,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rvm
   capistrano-sidekiq!
+  capistrano-thin
   capybara
   capybara-webkit
   carrierwave

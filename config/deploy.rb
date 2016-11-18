@@ -7,7 +7,7 @@ set :repo_url, 'https://github.com/ChNikS/ror_project.git'
 set :deploy_to, '/home/deployer/ror_project'
 set :deploy_user, 'deployer'
 
-append :linked_files, 'config/database.yml', 'config/secrets.yml', 'config/private_pub.yml', 'config/private_pub_thin.yml','.env'
+append :linked_files, 'config/database.yml', 'config/secrets.yml', 'config/private_pub.yml', 'config/private_pub_thin.yml', '.env'
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/uploads'
 
