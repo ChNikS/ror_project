@@ -9,7 +9,7 @@ set :deploy_user, 'deployer'
 
 append :linked_files, 'config/database.yml', 'config/secrets.yml', 'private_pub.yml', '.env'
 
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system'
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/uploads'
 
 namespace :deploy do
   desc 'Restart application'
