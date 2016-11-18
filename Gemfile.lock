@@ -5,6 +5,14 @@ GIT
   specs:
     remotipart (1.2.1)
 
+GIT
+  remote: git://github.com/seuros/capistrano-sidekiq.git
+  revision: bdb5b74fda19ca2b5623483004b94a06c8bcd331
+  specs:
+    capistrano-sidekiq (0.5.4)
+      capistrano
+      sidekiq (>= 3.4)
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -417,6 +425,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-rails
   capistrano-rvm
+  capistrano-sidekiq!
   capybara
   capybara-webkit
   carrierwave
