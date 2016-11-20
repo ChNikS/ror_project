@@ -7,7 +7,6 @@ require "capistrano/rvm"
 require "capistrano/bundler"
 require "capistrano/rails"
 require 'capistrano/sidekiq'
-require 'capistrano/thin'
 require 'whenever/capistrano'
 require 'thinking_sphinx/capistrano'
 require 'capistrano3/unicorn'
