@@ -58,7 +58,7 @@ gem 'mysql2'
 gem 'thinking-sphinx'
 gem 'therubyracer'
 gem 'unicorn'
-
+gem 'redis-rails'
 
 
 source 'https://rails-assets.org' do
