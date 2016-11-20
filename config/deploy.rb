@@ -11,6 +11,18 @@ append :linked_files, 'config/database.yml', 'config/secrets.yml', 'config/priva
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/uploads'
 
+namespace :deploy do
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      # execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:restart'
+    end
+  end
+
+  after :publishing, :restart
+end
+
 namespace :private_pub do
   desc 'Start private_pub server'
   task :start do
