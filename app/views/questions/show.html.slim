@@ -12,56 +12,56 @@
             -if can?(:destroy, a)
               = link_to 'Delete file', attachment_path(a), method: :delete,remote: true, data: { confirm: 'Are you sure?' } 
   br
-  - if can?(:like, @question)
-        .voting
-          .votable-total id="votable-total-#{@question.id}"
-            = @question.total
-            ul id="votable-already-links-#{@question.id}" class="#{current_user.voted?(@question) ? '' : 'hidden' }"
-              li= link_to 'change vote', [:change_vote, @question], method: :patch, remote: true
-              li= link_to 'cancel vote', [:cancel_vote, @question], method: :delete, remote: true
-                  
-  -if can?(:change_vote, @question)
-            ul id="votable-not-yet-links-#{@question.id}" class="#{current_user.can_vote?(@question) ? '' : 'hidden' }" 
-              li= link_to 'like', [:like, @question], method: :post, remote: true
-              li= link_to 'dislike', [:dislike, @question], method: :post, remote: true           
-  br
+- if can?(:like, @question)
+      .voting
+        .votable-total id="votable-total-#{@question.id}"
+          = @question.total
+          ul id="votable-already-links-#{@question.id}" class="#{current_user.voted?(@question) ? '' : 'hidden' }"
+            li= link_to 'change vote', [:change_vote, @question], method: :patch, remote: true
+            li= link_to 'cancel vote', [:cancel_vote, @question], method: :delete, remote: true
+                
+-if can?(:change_vote, @question)
+          ul id="votable-not-yet-links-#{@question.id}" class="#{current_user.can_vote?(@question) ? '' : 'hidden' }" 
+            li= link_to 'like', [:like, @question], method: :post, remote: true
+            li= link_to 'dislike', [:dislike, @question], method: :post, remote: true           
+br
 
-    .subscriptions
-      - if can?(:subscribe, Question)
-        =link_to 'Subscribe', subscribe_question_path(@question), remote: true, method: :post
-      - if can?(:unsubscribe, Question)
-        =link_to 'Unubscribe', unsubscribe_question_path(@question), remote: true, method: :delete
-  br
-  - if can?(:destroy, @question)
-    =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
-    ||
-  - if can?(:update, @question)  
-    =link_to 'Edit', edit_question_path(@question)
-    | &nbsp;question
+  .subscriptions
+    - if can?(:subscribe, Question)
+      =link_to 'Subscribe', subscribe_question_path(@question), remote: true, method: :post
+    - if can?(:unsubscribe, Question)
+      =link_to 'Unubscribe', unsubscribe_question_path(@question), remote: true, method: :delete
+br
+- if can?(:destroy, @question)
+  =link_to 'Delete', @question, method: :delete, data: { confirm: 'Are you sure?' }
+  ||
+- if can?(:update, @question)  
+  =link_to 'Edit', edit_question_path(@question)
+  | &nbsp;question
 
-  br
-  ol.answers
-  - if @question.answers.any?
-      = render @answers
-  = subscribe_to "/questions/#{@question.id}/answers"
-  br
-  hr
-  - if user_signed_in?
-    = form_for [@question, @answer], remote: true do |f|
-      p= f.label :body, 'Your answer:'
-      p= f.text_area :body
-      = f.fields_for :attachments, @answer.attachments.build, remote: true do |a|
-        = render 'attachment_fields', f: a
-      .answers_fields
-        = link_to_add_association 'Add file', f, :attachments 
+br
+ol.answers
+- if @question.answers.any?
+    = render @answers
+= subscribe_to "/questions/#{@question.id}/answers"
+br
+hr
+- if user_signed_in?
+  = form_for [@question, @answer], remote: true do |f|
+    p= f.label :body, 'Your answer:'
+    p= f.text_area :body
+    = f.fields_for :attachments, @answer.attachments.build, remote: true do |a|
+      = render 'attachment_fields', f: a
+    .answers_fields
+      = link_to_add_association 'Add file', f, :attachments 
 
-      p= f.submit 'Create answer'
+    p= f.submit 'Create answer'
 
-  br
-  h3 
-    |Comments:
-  .question_comments data= {commentable_id: "#{@question.id}"}
-    = render partial: 'comments/comments', locals: { commentable: @question }
+br
+h3 
+  |Comments:
+.question_comments data= {commentable_id: "#{@question.id}"}
+  = render partial: 'comments/comments', locals: { commentable: @question }
 
 
 = subscribe_to "/questions/#{@question.id}/comments"

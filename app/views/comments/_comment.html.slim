@@ -1,13 +1,14 @@
-- cache comment do
-  li.comment id="comment-#{ comment.id }"
-      div id="comment_body-#{ comment.id }"
+
+li.comment id="comment-#{ comment.id }"
+    div id="comment_body-#{ comment.id }"
+      - cache comment do
         = comment.body
-      - if can?(:destroy, comment)
-        br
-        = link_to 'Delete comment', comment_path(comment), method: :delete, remote: true
-        br
-      -if can?(:update, comment)
-        = form_for comment, remote: true, html: { id: "edit-comment-#{comment.id}", class: "edit_comment"} do |f|
-          = f.label :body, 'Comment text'
-          = f.text_area :body
-          = f.submit 'Update comment'
+    - if can?(:destroy, comment)
+      br
+      = link_to 'Delete comment', comment_path(comment), method: :delete, remote: true
+      br
+    -if can?(:update, comment)
+      = form_for comment, remote: true, html: { id: "edit-comment-#{comment.id}", class: "edit_comment"} do |f|
+        = f.label :body, 'Comment text'
+        = f.text_area :body
+        = f.submit 'Update comment'
